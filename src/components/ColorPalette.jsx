@@ -1,9 +1,6 @@
-import { useRef } from 'react'
 import { PALETTE } from '../lib/palette'
 
 export default function ColorPalette({ selectedColor, isEraser, onSelectColor, onSelectEraser }) {
-  const colorInputRef = useRef(null)
-
   return (
     <div className="color-palette" id="color-palette">
       {PALETTE.map(({ hex, name }) => (
@@ -18,15 +15,20 @@ export default function ColorPalette({ selectedColor, isEraser, onSelectColor, o
         </div>
       ))}
 
-      {/* Custom colour picker */}
+      {/* Custom colour picker — input overlays swatch so mobile tap hits it directly */}
       <div
         id="swatch-custom"
         className={`color-swatch${!isEraser && !PALETTE.find(p => p.hex === selectedColor) ? ' selected' : ''}`}
         style={!isEraser && !PALETTE.find(p => p.hex === selectedColor) ? { background: selectedColor } : {}}
-        onClick={() => colorInputRef.current?.click()}
       >
         <span className="sw-tip">Custom Color</span>
         🎨
+        <input
+          type="color"
+          id="custom-color-input"
+          defaultValue="#ff0000"
+          onChange={e => onSelectColor(e.target.value)}
+        />
       </div>
 
       {/* Eraser swatch */}
@@ -38,14 +40,6 @@ export default function ColorPalette({ selectedColor, isEraser, onSelectColor, o
         <span className="sw-tip">Eraser (Gray)</span>
         🧹
       </div>
-
-      <input
-        ref={colorInputRef}
-        type="color"
-        id="custom-color-input"
-        defaultValue="#ff0000"
-        onChange={e => onSelectColor(e.target.value)}
-      />
     </div>
   )
 }
