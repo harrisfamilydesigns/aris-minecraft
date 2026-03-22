@@ -38,9 +38,17 @@ const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768)
 ### CSS changes
 
 - Remove `margin-right: 180px` from `#main-content`
-- Add `transform: translateX(100%)` when closed, `translateX(0)` when open, with `transition: transform 0.25s ease`
-- Backdrop: `position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:19`
-- Floating toggle button: `position:fixed; bottom:52px; right:12px; z-index:30` (above ground bar at 40px)
+- Sidebar: `transform: translateX(100%)` when closed, `translateX(0)` when open, with `transition: transform 0.25s ease`; bump `z-index` to `21` (above backdrop)
+- Backdrop: `position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:19`; only rendered when drawer is open
+- Floating toggle button: `position:fixed; bottom:52px; right:12px; z-index:30` (above the 40px ground bar). Style matches the game's pixel aesthetic — use `font-family: 'Press Start 2P'`, dark background `rgba(30,20,10,0.9)`, gold border `#FFD700`, gold text, `📦` icon, label "MY BUILDS". Visible at all times; clicking it toggles the drawer. When the drawer is open the toggle button remains visible (user can use either it or the ✕ inside the drawer to close).
+
+### Resize behaviour
+
+No resize listener. The initial open/closed state is determined once at mount from `window.innerWidth`. If the user resizes the browser the drawer state does not automatically change — this is acceptable for a child's single-session app.
+
+### Keyboard / accessibility
+
+No `Escape` key handler needed. This is a child's game app.
 
 ---
 

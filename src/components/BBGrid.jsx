@@ -35,13 +35,16 @@ export default function BBGrid({ bbState, onBBChange, selectedColor, isEraser })
     }
   }
 
+  const bbCellSize = Math.min(40, Math.floor((window.innerWidth - 25) / BB_SIZE))
+
   return (
     <div className="bb-grid-container">
       <div
         className="bb-grid"
         style={{
-          gridTemplateColumns: `repeat(${BB_SIZE}, 40px)`,
-          gridTemplateRows: `repeat(${BB_SIZE}, 40px)`,
+          gridTemplateColumns: `repeat(${BB_SIZE}, ${bbCellSize}px)`,
+          gridTemplateRows: `repeat(${BB_SIZE}, ${bbCellSize}px)`,
+          '--bb-cell-size': `${bbCellSize}px`,
         }}
       >
         {cells}

@@ -1,0 +1,44 @@
+<h2>Design Summary</h2>
+<p class="subtitle">Review before we start building</p>
+
+<div class="section">
+  <h3>1. Sidebar → Overlay Drawer</h3>
+  <ul style="margin:8px 0 0 16px;line-height:2;">
+    <li>Remove <code>margin-right: 180px</code> from <code>#main-content</code> — content fills full width</li>
+    <li><code>sidebarOpen</code> state in <code>App.jsx</code>, defaults to <code>true</code> on desktop (≥768px), <code>false</code> on mobile</li>
+    <li>Sidebar overlays content — same fixed-right position but higher z-index, no push</li>
+    <li>Semi-transparent backdrop appears behind open drawer; clicking it closes the drawer</li>
+    <li>Smooth slide-in/out transition from the right</li>
+    <li>Sidebar receives <code>isOpen</code> + <code>onClose</code> props; add a close ✕ button inside the drawer header</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h3>2. Floating "MY BUILDS" Toggle Button</h3>
+  <ul style="margin:8px 0 0 16px;line-height:2;">
+    <li>Fixed position, bottom-right corner (above the ground bar)</li>
+    <li>Shows 📦 icon + "MY BUILDS" label, styled to match the game's pixel aesthetic</li>
+    <li>Always visible; toggles the drawer open/closed</li>
+    <li>Rendered in <code>App.jsx</code> alongside Sidebar</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h3>3. Controls Move Below Grid / Builder</h3>
+  <ul style="margin:8px 0 0 16px;line-height:2;">
+    <li><strong>WorldPanel:</strong> move <code>.controls</code> div after <code>&lt;WorldGrid /&gt;</code> (currently sits above it)</li>
+    <li><strong>BlockPanel:</strong> move <code>.controls</code> div after <code>&lt;BBGrid /&gt;</code> (currently sits above it)</li>
+    <li>No style changes needed — just JSX reorder</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h3>Files Changed</h3>
+  <ul style="margin:8px 0 0 16px;line-height:2;">
+    <li><code>App.jsx</code> — add <code>sidebarOpen</code> state, floating button, pass props to Sidebar</li>
+    <li><code>Sidebar.jsx</code> — accept <code>isOpen</code>/<code>onClose</code>, add close button</li>
+    <li><code>WorldPanel.jsx</code> — move controls below WorldGrid</li>
+    <li><code>BlockPanel.jsx</code> — move controls below BBGrid</li>
+    <li><code>index.css</code> — remove margin-right, add drawer/backdrop/floating-btn styles</li>
+  </ul>
+</div>

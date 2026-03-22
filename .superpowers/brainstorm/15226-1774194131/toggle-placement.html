@@ -1,0 +1,56 @@
+<h2>Where should the "MY BUILDS" toggle button go?</h2>
+<p class="subtitle">Pick the placement that feels most natural</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:10px;background:#87CEEB;font-family:'monospace';font-size:9px;">
+      <div style="display:flex;justify-content:center;align-items:center;gap:8px;background:rgba(0,0,0,0.15);padding:6px;border-radius:4px;margin-bottom:6px;">
+        <span style="font-weight:bold;color:#3a3a3a;font-size:11px;">ARI'S MINECRAFT WORLD</span>
+        <span style="background:rgba(30,20,10,0.85);color:#FFD700;border:1px solid #FFD700;padding:3px 7px;border-radius:3px;font-size:8px;cursor:pointer;">📦 BUILDS</span>
+      </div>
+      <div style="display:flex;gap:4px;justify-content:center;margin-bottom:6px;">
+        <div style="background:rgba(0,0,0,0.5);color:#FFD700;border:2px solid #FFD700;padding:4px 10px;border-radius:3px;font-size:8px;">WORLD BUILDER</div>
+        <div style="background:rgba(0,0,0,0.3);color:#aaa;border:2px solid #555;padding:4px 10px;border-radius:3px;font-size:8px;">BLOCK BUILDER</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.1);border:1px solid #888;height:40px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#555;font-size:8px;">grid</div>
+    </div>
+    <div class="card-body">
+      <h3>A — In the header row</h3>
+      <p>Sits next to the title. Always visible, feels like main navigation.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:10px;background:#87CEEB;font-family:'monospace';font-size:9px;">
+      <div style="text-align:center;color:#3a3a3a;font-size:11px;font-weight:bold;padding:6px;margin-bottom:4px;">ARI'S MINECRAFT WORLD</div>
+      <div style="display:flex;gap:4px;justify-content:center;margin-bottom:4px;">
+        <div style="background:rgba(0,0,0,0.5);color:#FFD700;border:2px solid #FFD700;padding:4px 8px;border-radius:3px;font-size:8px;">WORLD BUILDER</div>
+        <div style="background:rgba(0,0,0,0.3);color:#aaa;border:2px solid #555;padding:4px 8px;border-radius:3px;font-size:8px;">BLOCK BUILDER</div>
+        <div style="background:rgba(30,20,10,0.85);color:#FFD700;border:2px solid #FFD700;padding:4px 8px;border-radius:3px;font-size:8px;">📦 BUILDS</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.1);border:1px solid #888;height:40px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#555;font-size:8px;">grid</div>
+    </div>
+    <div class="card-body">
+      <h3>B — In the mode toggle bar</h3>
+      <p>Sits alongside World/Block Builder tabs as a third tab-like button. Groups all modes together.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:10px;background:#87CEEB;font-family:'monospace';font-size:9px;position:relative;">
+      <div style="text-align:center;color:#3a3a3a;font-size:11px;font-weight:bold;padding:6px;margin-bottom:4px;">ARI'S MINECRAFT WORLD</div>
+      <div style="display:flex;gap:4px;justify-content:center;margin-bottom:4px;">
+        <div style="background:rgba(0,0,0,0.5);color:#FFD700;border:2px solid #FFD700;padding:4px 10px;border-radius:3px;font-size:8px;">WORLD BUILDER</div>
+        <div style="background:rgba(0,0,0,0.3);color:#aaa;border:2px solid #555;padding:4px 10px;border-radius:3px;font-size:8px;">BLOCK BUILDER</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.1);border:1px solid #888;height:40px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#555;font-size:8px;">grid</div>
+      <div style="position:absolute;bottom:14px;right:14px;background:rgba(30,20,10,0.9);color:#FFD700;border:2px solid #FFD700;padding:5px 8px;border-radius:6px;font-size:8px;box-shadow:0 2px 8px rgba(0,0,0,0.4);">📦</div>
+    </div>
+    <div class="card-body">
+      <h3>C — Floating button (bottom-right)</h3>
+      <p>Always accessible, thumb-friendly on phone. Stays out of the main layout flow.</p>
+    </div>
+  </div>
+
+</div>

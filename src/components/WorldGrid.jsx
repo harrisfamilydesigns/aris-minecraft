@@ -67,13 +67,17 @@ export default function WorldGrid({
     }
   }
 
+  // Fit the grid within the viewport width, capped at 34px per cell
+  const cellSize = Math.min(34, Math.floor((window.innerWidth - 25) / COLS))
+
   return (
     <div className="grid-container">
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${COLS}, 34px)`,
-          gridTemplateRows: `repeat(${ROWS}, 34px)`,
+          gridTemplateColumns: `repeat(${COLS}, ${cellSize}px)`,
+          gridTemplateRows: `repeat(${ROWS}, ${cellSize}px)`,
+          '--cell-size': `${cellSize}px`,
         }}
       >
         {cells}
@@ -110,7 +114,8 @@ const Cell = React.memo(function Cell({ r, c, blockType, blocks, isMouseDown, on
       onMouseEnter={() => {
         if (isMouseDown.current) onPaint(r, c, divRef.current)
       }}
-      onTouchStart={e => {
+      onTouchStart={e => e.preventDefault()}
+      onTouchEnd={e => {
         onPaint(r, c, divRef.current)
         e.preventDefault()
       }}

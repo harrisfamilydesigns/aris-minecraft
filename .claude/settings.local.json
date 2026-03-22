@@ -5,7 +5,9 @@
       "Bash(git *)",
       "Read(//Users/max/**)",
       "Bash(npx *)",
-      "Bash(node_modules/.bin/vite *)"
+      "Bash(node_modules/.bin/vite *)",
+      "Bash(/Users/max/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/scripts/start-server.sh --project-dir /Users/max/Projects/claude-workspace/aris-minecraft)",
+      "Bash(/Users/max/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh --project-dir /Users/max/Projects/claude-workspace/aris-minecraft)"
     ]
   }
 }

@@ -1,9 +1,12 @@
 import TemplateCard from './TemplateCard'
 
-export default function Sidebar({ templates, blocks, onLoadTemplate, onDeleteTemplate }) {
+export default function Sidebar({ templates, blocks, onLoadTemplate, onDeleteTemplate, isOpen, onClose }) {
   return (
-    <div id="sidebar">
-      <div id="sidebar-title">📦 MY BUILDS</div>
+    <div id="sidebar" className={isOpen ? 'open' : ''}>
+      <div id="sidebar-title">
+        <span>📦 MY BUILDS</span>
+        <button id="sidebar-close" onClick={onClose}>✕</button>
+      </div>
       <div id="template-list">
         {templates.length === 0 ? (
           <div id="sidebar-empty">

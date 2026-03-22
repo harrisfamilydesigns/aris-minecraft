@@ -122,12 +122,6 @@ export default function WorldPanel({
         onSelect={onSelectBlock}
         onDelete={onDeleteCustomBlock}
       />
-      <div className="controls">
-        <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
-        <button className="ctrl-btn btn-surprise" onClick={handleSurprise}>⭐ SURPRISE!</button>
-        <button className="ctrl-btn btn-save" onClick={() => onOpenSaveModal('world')}>💾 SAVE</button>
-        <button className="ctrl-btn btn-clear" onClick={handleClear}>💥 CLEAR</button>
-      </div>
       <WorldGrid
         gridState={gridState}
         onGridChange={onGridChange}
@@ -137,6 +131,12 @@ export default function WorldPanel({
         onBlockCountChange={onBlockCountChange}
         onSpawnParticles={handleSpawnParticles}
       />
+      <div className="controls">
+        <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
+        <button className="ctrl-btn btn-surprise" onClick={handleSurprise}>⭐ SURPRISE!</button>
+        <button className="ctrl-btn btn-save" onClick={() => onOpenSaveModal('world')}>💾 SAVE</button>
+        <button className="ctrl-btn btn-clear" onClick={handleClear}>💥 CLEAR</button>
+      </div>
     </div>
   )
 }

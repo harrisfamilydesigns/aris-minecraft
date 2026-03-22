@@ -8,7 +8,7 @@ export function useTemplates() {
       const { data, error } = await sb
         .from('minecraft_builds')
         .select('*')
-        .order('created_at')
+        .order('created_at', { ascending: false })
       if (error) throw error
       return data.map(r => ({ id: r.id, name: r.name, state: r.state }))
     },

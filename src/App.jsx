@@ -37,6 +37,7 @@ function CreeperPopupDismisser({ popup, onDone }) {
 export default function App() {
   // ── Mode ──────────────────────────────────────────────────────────────────
   const [mode, setMode] = useState('world')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // ── World grid ────────────────────────────────────────────────────────────
   const [gridState, setGridState] = useState(emptyGrid)
@@ -165,11 +166,15 @@ export default function App() {
           />
         )}
       </div>
+      {sidebarOpen && <div id="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+      <button id="sidebar-toggle" onClick={() => setSidebarOpen(o => !o)}>📦 MY BUILDS</button>
       <Sidebar
         templates={templates}
         blocks={blocks}
         onLoadTemplate={handleLoadTemplate}
         onDeleteTemplate={handleDeleteTemplate}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
       <Particles ref={particlesRef} />
       <Ground />

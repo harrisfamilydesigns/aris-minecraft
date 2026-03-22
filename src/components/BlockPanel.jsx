@@ -24,17 +24,17 @@ export default function BlockPanel({
         onSelectColor={onSelectColor}
         onSelectEraser={onSelectEraser}
       />
-      <div className="controls">
-        <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
-        <button className="ctrl-btn btn-clear" onClick={handleClear}>🔄 CLEAR</button>
-        <button className="ctrl-btn btn-save-block" onClick={() => onOpenSaveModal('block')}>🧱 SAVE BLOCK</button>
-      </div>
       <BBGrid
         bbState={bbState}
         onBBChange={onBBChange}
         selectedColor={selectedColor}
         isEraser={isEraser}
       />
+      <div className="controls">
+        <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
+        <button className="ctrl-btn btn-clear" onClick={handleClear}>🔄 CLEAR</button>
+        <button className="ctrl-btn btn-save-block" onClick={() => onOpenSaveModal('block')}>🧱 SAVE BLOCK</button>
+      </div>
     </div>
   )
 }
