@@ -104,10 +104,11 @@ export const BUILT_IN_BLOCKS = {
 export function drawBlock(canvas, blockType, blocks) {
   const ctx = canvas.getContext('2d')
   const block = blocks[blockType]
-  canvas.width = canvas.height = 8
-  ctx.clearRect(0, 0, 8, 8)
-  for (let y = 0; y < 8; y++)
-    for (let x = 0; x < 8; x++) {
+  const size = block.colors.length
+  canvas.width = canvas.height = size
+  ctx.clearRect(0, 0, size, size)
+  for (let y = 0; y < size; y++)
+    for (let x = 0; x < size; x++) {
       const color = block.colors[y][x]
       if (color == null) continue
       ctx.fillStyle = color
@@ -120,6 +121,7 @@ export function buildPreviewCanvas(state, blocks, cols, rows) {
   canvas.width = cols * 8
   canvas.height = rows * 8
   const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = false
   ctx.fillStyle = '#87CEEB'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   for (let r = 0; r < rows; r++)
@@ -127,12 +129,27 @@ export function buildPreviewCanvas(state, blocks, cols, rows) {
       const bt = state[r][c]
       if (!bt || !blocks[bt]) continue
       const colors = blocks[bt].colors
-      for (let py = 0; py < 8; py++)
-        for (let px = 0; px < 8; px++) {
-          if (colors[py][px] == null) continue
-          ctx.fillStyle = colors[py][px]
-          ctx.fillRect(c * 8 + px, r * 8 + py, 1, 1)
-        }
+      const size = colors.length
+      if (size === 8) {
+        for (let py = 0; py < 8; py++)
+          for (let px = 0; px < 8; px++) {
+            if (colors[py][px] == null) continue
+            ctx.fillStyle = colors[py][px]
+            ctx.fillRect(c * 8 + px, r * 8 + py, 1, 1)
+          }
+      } else {
+        // Draw at native size into a temp canvas, then scale down to 8×8
+        const tmp = document.createElement('canvas')
+        tmp.width = tmp.height = size
+        const tctx = tmp.getContext('2d')
+        for (let py = 0; py < size; py++)
+          for (let px = 0; px < size; px++) {
+            if (colors[py][px] == null) continue
+            tctx.fillStyle = colors[py][px]
+            tctx.fillRect(px, py, 1, 1)
+          }
+        ctx.drawImage(tmp, c * 8, r * 8, 8, 8)
+      }
     }
   return canvas
 }

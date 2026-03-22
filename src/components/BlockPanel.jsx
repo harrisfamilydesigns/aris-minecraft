@@ -3,7 +3,9 @@ import BBGrid from './BBGrid'
 
 export default function BlockPanel({
   bbState,
+  bbResolution,
   onBBChange,
+  onToggleResolution,
   selectedColor,
   isEraser,
   onSelectColor,
@@ -11,7 +13,7 @@ export default function BlockPanel({
   onOpenSaveModal,
 }) {
   function handleClear() {
-    const empty = Array(8).fill(null).map(() => Array(8).fill(null))
+    const empty = Array(bbResolution).fill(null).map(() => Array(bbResolution).fill(null))
     onBBChange(empty)
   }
 
@@ -26,6 +28,7 @@ export default function BlockPanel({
       />
       <BBGrid
         bbState={bbState}
+        bbSize={bbResolution}
         onBBChange={onBBChange}
         selectedColor={selectedColor}
         isEraser={isEraser}
@@ -33,6 +36,13 @@ export default function BlockPanel({
       <div className="controls">
         <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
         <button className="ctrl-btn btn-clear" onClick={handleClear}>🔄 CLEAR</button>
+        <button
+          className={`ctrl-btn btn-resolution${bbResolution === 16 ? ' active' : ''}`}
+          onClick={onToggleResolution}
+          title="Toggle grid resolution"
+        >
+          {bbResolution === 8 ? '8×8' : '16×16'}
+        </button>
         <button className="ctrl-btn btn-save-block" onClick={() => onOpenSaveModal('block')}>🧱 SAVE BLOCK</button>
       </div>
     </div>

@@ -17,14 +17,25 @@ import CreeperPopup from './components/CreeperPopup'
 
 const COLS = 18
 const ROWS = 10
-const BB_SIZE = 8
 
 function emptyGrid() {
   return Array(ROWS).fill(null).map(() => Array(COLS).fill(null))
 }
 
-function emptyBB() {
-  return Array(BB_SIZE).fill(null).map(() => Array(BB_SIZE).fill(null))
+function emptyBB(size = 8) {
+  return Array(size).fill(null).map(() => Array(size).fill(null))
+}
+
+function scaleUp(grid) {
+  return Array.from({ length: 16 }, (_, r) =>
+    Array.from({ length: 16 }, (_, c) => grid[Math.floor(r / 2)][Math.floor(c / 2)])
+  )
+}
+
+function scaleDown(grid) {
+  return Array.from({ length: 8 }, (_, r) =>
+    Array.from({ length: 8 }, (_, c) => grid[r * 2][c * 2])
+  )
 }
 
 // Defined outside App so its identity is stable — prevents CreeperPopup's useEffect timer
@@ -47,6 +58,7 @@ export default function App() {
 
   // ── Block builder ─────────────────────────────────────────────────────────
   const [bbState, setBBState] = useState(emptyBB)
+  const [bbResolution, setBBResolution] = useState(8)
   const [bbColor, setBBColor] = useState('#F9FFFE')
   const [bbEraser, setBBEraser] = useState(false)
 
@@ -77,6 +89,16 @@ export default function App() {
   }, [customBlocksList])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
+  function handleToggleBBResolution() {
+    if (bbResolution === 8) {
+      setBBState(prev => scaleUp(prev))
+      setBBResolution(16)
+    } else {
+      setBBState(prev => scaleDown(prev))
+      setBBResolution(8)
+    }
+  }
+
   function handleSelectBlock(key) {
     setIsEraser(false)
     setSelectedBlock(key)
@@ -105,6 +127,7 @@ export default function App() {
       const colors = bbState.map(row => [...row])
       await saveCustomBlock.mutateAsync({ key, name, colors })
       setBBState(emptyBB())
+      setBBResolution(8)
       setMode('world')
       handleSelectBlock(key)
       playFanfare()
@@ -157,7 +180,9 @@ export default function App() {
         {mode === 'block' && (
           <BlockPanel
             bbState={bbState}
+            bbResolution={bbResolution}
             onBBChange={setBBState}
+            onToggleResolution={handleToggleBBResolution}
             selectedColor={bbColor}
             isEraser={bbEraser}
             onSelectColor={c => { setBBColor(c); setBBEraser(false) }}

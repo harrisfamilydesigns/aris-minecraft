@@ -1,8 +1,6 @@
 import { useRef, useCallback, useEffect } from 'react'
 
-const BB_SIZE = 8
-
-export default function BBGrid({ bbState, onBBChange, selectedColor, isEraser }) {
+export default function BBGrid({ bbState, bbSize = 8, onBBChange, selectedColor, isEraser }) {
   const isMouseDown = useRef(false)
 
   const paint = useCallback((r, c) => {
@@ -19,9 +17,9 @@ export default function BBGrid({ bbState, onBBChange, selectedColor, isEraser })
   }, [])
 
   const cells = []
-  for (let r = 0; r < BB_SIZE; r++) {
-    for (let c = 0; c < BB_SIZE; c++) {
-      const color = bbState[r][c]
+  for (let r = 0; r < bbSize; r++) {
+    for (let c = 0; c < bbSize; c++) {
+      const color = bbState[r]?.[c]
       cells.push(
         <div
           key={`${r}-${c}`}
@@ -35,15 +33,15 @@ export default function BBGrid({ bbState, onBBChange, selectedColor, isEraser })
     }
   }
 
-  const bbCellSize = Math.min(40, Math.floor((window.innerWidth - 25) / BB_SIZE))
+  const bbCellSize = Math.min(40, Math.floor((window.innerWidth - 25) / bbSize))
 
   return (
     <div className="bb-grid-container">
       <div
         className="bb-grid"
         style={{
-          gridTemplateColumns: `repeat(${BB_SIZE}, ${bbCellSize}px)`,
-          gridTemplateRows: `repeat(${BB_SIZE}, ${bbCellSize}px)`,
+          gridTemplateColumns: `repeat(${bbSize}, ${bbCellSize}px)`,
+          gridTemplateRows: `repeat(${bbSize}, ${bbCellSize}px)`,
           '--bb-cell-size': `${bbCellSize}px`,
         }}
       >
