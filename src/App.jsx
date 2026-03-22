@@ -89,6 +89,11 @@ export default function App() {
   }, [customBlocksList])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
+  function handleLoadBBTemplate(colors) {
+    setBBState(colors.map(row => [...row]))
+    setBBResolution(colors.length)
+  }
+
   function handleToggleBBResolution() {
     if (bbResolution === 8) {
       setBBState(prev => scaleUp(prev))
@@ -183,6 +188,8 @@ export default function App() {
             bbResolution={bbResolution}
             onBBChange={setBBState}
             onToggleResolution={handleToggleBBResolution}
+            onLoadTemplate={handleLoadBBTemplate}
+            customBlocks={customBlocksList}
             selectedColor={bbColor}
             isEraser={bbEraser}
             onSelectColor={c => { setBBColor(c); setBBEraser(false) }}

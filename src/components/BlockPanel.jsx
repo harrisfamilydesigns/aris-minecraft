@@ -1,11 +1,14 @@
 import ColorPalette from './ColorPalette'
 import BBGrid from './BBGrid'
+import BlockTemplates from './BlockTemplates'
 
 export default function BlockPanel({
   bbState,
   bbResolution,
   onBBChange,
   onToggleResolution,
+  onLoadTemplate,
+  customBlocks,
   selectedColor,
   isEraser,
   onSelectColor,
@@ -17,15 +20,33 @@ export default function BlockPanel({
     onBBChange(empty)
   }
 
+  const usedColors = [...new Set(bbState.flat().filter(Boolean))]
+
   return (
     <div id="block-panel">
       <div className="bb-label">Paint your own block! 🖌️ Then hit SAVE BLOCK to add it to the toolbar.</div>
+      <BlockTemplates customBlocks={customBlocks} onLoad={onLoadTemplate} />
       <ColorPalette
         selectedColor={selectedColor}
         isEraser={isEraser}
         onSelectColor={onSelectColor}
         onSelectEraser={onSelectEraser}
       />
+      {usedColors.length > 0 && (
+        <div className="used-colors">
+          <span className="used-colors-label">USED:</span>
+          {usedColors.map(hex => (
+            <div
+              key={hex}
+              className={`color-swatch${!isEraser && selectedColor === hex ? ' selected' : ''}`}
+              style={{ background: hex }}
+              onClick={() => onSelectColor(hex)}
+            >
+              <span className="sw-tip">{hex}</span>
+            </div>
+          ))}
+        </div>
+      )}
       <BBGrid
         bbState={bbState}
         bbSize={bbResolution}

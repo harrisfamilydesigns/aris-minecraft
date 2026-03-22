@@ -166,6 +166,44 @@ body {
 #swatch-custom { position:relative; }
 #custom-color-input { position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; border:none; padding:0; }
 
+/* Template picker row */
+.bb-templates {
+  display:flex; align-items:center; gap:6px; padding:3px 8px;
+  position:relative; z-index:10; width:100%; max-width:380px; box-sizing:border-box;
+}
+.bb-templates-label {
+  font-family:'Press Start 2P', monospace; font-size:6px; color:#1a3a00;
+  white-space:nowrap; flex-shrink:0;
+}
+.bb-templates-scroll {
+  display:flex; gap:5px; overflow-x:auto; padding-bottom:2px;
+  scrollbar-width:thin; scrollbar-color:#555 transparent;
+}
+.bb-template-btn {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  cursor:pointer; flex-shrink:0; transition:transform 0.1s;
+}
+.bb-template-btn:hover { transform:scale(1.15); }
+.bb-template-btn canvas {
+  width:32px; height:32px; image-rendering:pixelated; display:block;
+  border:2px solid #555; border-radius:3px;
+}
+.bb-template-btn:hover canvas { border-color:#FFD700; box-shadow:0 0 6px #FFD700; }
+.bb-template-name {
+  font-family:'Press Start 2P', monospace; font-size:5px; color:#1a3a00;
+  white-space:nowrap; max-width:36px; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* Used colors row */
+.used-colors {
+  display:flex; flex-wrap:wrap; align-items:center; gap:4px;
+  padding:3px 8px; position:relative; z-index:10; max-width:380px;
+}
+.used-colors-label {
+  font-family:'Press Start 2P', monospace; font-size:6px; color:#1a3a00;
+  white-space:nowrap;
+}
+
 .bb-grid-container { display:flex; justify-content:center; padding:4px; position:relative; z-index:5; }
 .bb-grid {
   display:grid; gap:1px;
