@@ -6,14 +6,15 @@ body {
   overflow: hidden;
   height: 100vh;
   user-select: none;
-  display: flex;
 }
 
 #main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   min-width: 0;
+  margin-right: 180px;
 }
 
 /* Clouds */
@@ -219,7 +220,8 @@ body {
 /* ── Sidebar ── */
 #sidebar {
   width:180px; background:rgba(30,20,10,0.82); border-left:4px solid #555;
-  display:flex; flex-direction:column; z-index:20; position:relative;
+  display:flex; flex-direction:column; z-index:20;
+  position:fixed; right:0; top:0; height:100vh;
 }
 #sidebar-title {
   font-size:8px; color:#FFD700; text-align:center; padding:10px 6px 6px;
