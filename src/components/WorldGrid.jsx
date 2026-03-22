@@ -22,25 +22,27 @@ export default function WorldGrid({
 
   const paint = useCallback((r, c, cellEl) => {
     if (isEraser) {
-      if (gridState[r][c]) {
-        const next = gridState.map(row => [...row])
+      onGridChange(prev => {
+        if (!prev[r][c]) return prev // nothing to erase
+        const next = prev.map(row => [...row])
         next[r][c] = null
-        onGridChange(next)
         onBlockCountChange(count => Math.max(0, count - 1))
-      }
-      return  // no particles when erasing
+        return next
+      })
+      return
     }
     if (!selectedBlock) return
-    if (gridState[r][c] === selectedBlock) return
-    const next = gridState.map(row => [...row])
-    const isNew = !next[r][c]
-    next[r][c] = selectedBlock
-    onGridChange(next)
-    if (isNew) onBlockCountChange(count => count + 1)
-    playPlaceSound()
-    // Only spawn particles when actually placing a block (not erasing)
-    if (cellEl) onSpawnParticles(cellEl)
-  }, [gridState, onGridChange, selectedBlock, isEraser, onBlockCountChange, onSpawnParticles])
+    onGridChange(prev => {
+      if (prev[r][c] === selectedBlock) return prev // no change
+      const next = prev.map(row => [...row])
+      const isNew = !prev[r][c]
+      next[r][c] = selectedBlock
+      if (isNew) onBlockCountChange(count => count + 1)
+      playPlaceSound()
+      if (cellEl) onSpawnParticles(cellEl)
+      return next
+    })
+  }, [selectedBlock, isEraser, onGridChange, onBlockCountChange, onSpawnParticles])
 
   useEffect(() => {
     const up = () => { isMouseDown.current = false }

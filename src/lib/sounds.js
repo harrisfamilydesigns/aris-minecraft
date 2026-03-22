@@ -10,6 +10,7 @@ export function playPlaceSound() {
     gain.gain.setValueAtTime(0.08, ctx.currentTime)
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.1)
+    osc.onended = () => ctx.close()
   } catch (e) {}
 }
 
@@ -38,7 +39,8 @@ export function playExplosion() {
 export function playFanfare() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)()
-    ;[523, 659, 784, 1047].forEach((freq, i) => {
+    const freqs = [523, 659, 784, 1047]
+    freqs.forEach((freq, i) => {
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
       osc.connect(gain); gain.connect(ctx.destination)
@@ -48,6 +50,9 @@ export function playFanfare() {
       gain.gain.setValueAtTime(0.07, t)
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15)
       osc.start(t); osc.stop(t + 0.15)
+      if (i === freqs.length - 1) {
+        osc.onended = () => ctx.close()
+      }
     })
   } catch (e) {}
 }
