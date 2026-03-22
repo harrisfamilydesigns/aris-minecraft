@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(git *)",
+      "Read(//Users/max/**)",
+      "Bash(npx *)",
+      "Bash(node_modules/.bin/vite *)"
+    ]
+  }
+}
