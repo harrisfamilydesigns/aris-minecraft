@@ -1,7 +1,14 @@
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useEffect, useState } from 'react'
 
 export default function BBGrid({ bbState, bbSize = 8, onBBChange, selectedColor, isEraser }) {
   const isMouseDown = useRef(false)
+  const [, setTick] = useState(0)
+
+  useEffect(() => {
+    const onResize = () => setTick(t => t + 1)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const paint = useCallback((r, c) => {
     const color = isEraser ? null : selectedColor
