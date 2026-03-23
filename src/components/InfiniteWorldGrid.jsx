@@ -319,9 +319,21 @@ export default function InfiniteWorldGrid({
     }
 
     // ── Resize ───────────────────────────────────────────────────────────────
+    let sizedOnce = false
     function onResize() {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      // Use canvas.clientWidth/Height (actual CSS layout size after position:fixed;inset:0)
+      // rather than window.innerWidth/Height, which may lag behind on mobile Safari.
+      const w = canvas.clientWidth || window.innerWidth
+      const h = canvas.clientHeight || window.innerHeight
+      if (!w || !h) return
+      // On first resize, recompute zoom from the real canvas width so the initial
+      // calculation (which may have run before the mobile viewport settled) is correct.
+      if (!sizedOnce) {
+        zoomRef.current = Math.min(1, Math.floor((w - 8) / 18) / CELL_SIZE)
+        sizedOnce = true
+      }
+      canvas.width = w
+      canvas.height = h
       scheduleRender()
     }
 
@@ -334,7 +346,9 @@ export default function InfiniteWorldGrid({
     document.addEventListener('mouseup', onMouseUp)
     window.addEventListener('resize', onResize)
 
-    onResize()  // set initial size and render
+    // Defer to next frame so CSS (position:fixed; inset:0) is applied before
+    // we read canvas.clientWidth/Height for the initial size calculation.
+    const initRaf = requestAnimationFrame(onResize)
 
     return () => {
       canvas.removeEventListener('touchstart', onTouchStart)
@@ -345,6 +359,7 @@ export default function InfiniteWorldGrid({
       canvas.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseup', onMouseUp)
       window.removeEventListener('resize', onResize)
+      cancelAnimationFrame(initRaf)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
