@@ -302,31 +302,6 @@ body {
   transition: transform 0.25s ease;
 }
 #block-drawer.open { transform: translateX(0); }
-#block-drawer .bb-template-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  transition: background 0.12s;
-}
-#block-drawer .bb-template-btn:hover { background: rgba(255,215,0,0.1); }
-#block-drawer .bb-template-btn canvas {
-  width: 36px;
-  height: 36px;
-  image-rendering: pixelated;
-  border: 2px solid #555;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-#block-drawer .bb-template-name {
-  font-size: 6px;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 /* ── Block buttons (shared by bottom bar and toolbar) ── */
 .block-btn {

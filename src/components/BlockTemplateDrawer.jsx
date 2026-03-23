@@ -1,24 +1,26 @@
 import { useEffect, useRef } from 'react'
 import { drawBlock } from '../lib/blocks'
 
-function TemplateButton({ blockKey, block, onClick, onDelete }) {
+function BlockCard({ blockKey, block, onLoad, onDelete }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
-    if (canvasRef.current) drawBlock(canvasRef.current, blockKey, { [blockKey]: block })
+    if (!canvasRef.current) return
+    const canvas = canvasRef.current
+    canvas.width = block.colors.length
+    canvas.height = block.colors.length
+    drawBlock(canvas, blockKey, { [blockKey]: block })
+    canvas.className = 'template-preview'
   }, [blockKey, block])
 
   return (
-    <div className="bb-template-btn" onClick={onClick} title={block.name}>
-      <div style={{ position: 'relative', flexShrink: 0 }}>
-        <canvas ref={canvasRef} />
-        <span
-          className="custom-del"
-          style={{ display: 'block' }}
-          onClick={e => { e.stopPropagation(); onDelete(blockKey) }}
-        >×</span>
+    <div className="template-card" onClick={onLoad}>
+      <div className="template-name">{block.name}</div>
+      <canvas ref={canvasRef} className="template-preview" />
+      <div className="template-actions">
+        <button className="tpl-btn tpl-load" onClick={e => { e.stopPropagation(); onLoad() }}>▶ LOAD</button>
+        <button className="tpl-btn tpl-delete" onClick={e => { e.stopPropagation(); onDelete(blockKey) }}>✕ DEL</button>
       </div>
-      <span className="bb-template-name">{block.name}</span>
     </div>
   )
 }
@@ -38,11 +40,11 @@ export default function BlockTemplateDrawer({ customBlocks, isOpen, onClose, onL
           </div>
         ) : (
           customBlocks.map(cb => (
-            <TemplateButton
+            <BlockCard
               key={cb.key}
               blockKey={cb.key}
               block={cb}
-              onClick={() => { onLoad(cb.colors); onClose() }}
+              onLoad={() => { onLoad(cb.colors); onClose() }}
               onDelete={onDelete}
             />
           ))
