@@ -5,8 +5,11 @@ const MIN_ZOOM = 0.15
 const MAX_ZOOM = 8
 
 function initialZoom() {
-  // Show ~18 cells across on any screen width
-  return Math.min(1, Math.floor((window.innerWidth - 8) / 18) / CELL_SIZE)
+  const w = window.innerWidth
+  // Cap at 0.65 on small screens so a pre-settled viewport width can't force
+  // zoom to 1.0 (which would show only ~12 cells on a 390px phone).
+  const cap = w < 1024 ? 0.65 : 1
+  return Math.min(cap, Math.floor((w - 8) / 20) / CELL_SIZE)
 }
 
 export default function InfiniteWorldGrid({
@@ -329,7 +332,8 @@ export default function InfiniteWorldGrid({
       // On first resize, recompute zoom from the real canvas width so the initial
       // calculation (which may have run before the mobile viewport settled) is correct.
       if (!sizedOnce) {
-        zoomRef.current = Math.min(1, Math.floor((w - 8) / 18) / CELL_SIZE)
+        const cap = w < 1024 ? 0.65 : 1
+        zoomRef.current = Math.min(cap, Math.floor((w - 8) / 20) / CELL_SIZE)
         sizedOnce = true
       }
       canvas.width = w
