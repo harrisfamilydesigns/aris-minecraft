@@ -33,7 +33,12 @@ export default function BBGrid({ bbState, bbSize = 8, onBBChange, selectedColor,
     }
   }
 
-  const bbCellSize = Math.min(40, Math.floor((window.innerWidth - 25) / bbSize))
+  const availableH = window.innerHeight - 168 // top toggle ~52 + bottom bar ~64 + used row ~44 + padding
+  const bbCellSize = Math.min(
+    40,
+    Math.floor((window.innerWidth - 25) / bbSize),
+    Math.floor(availableH / bbSize),
+  )
 
   return (
     <div className="bb-grid-container">
