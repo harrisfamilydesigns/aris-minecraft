@@ -99,7 +99,7 @@ export default function WorldBottomBar({
 
       {/* ── Right: My Builds ── */}
       <button className="wbb-builds-btn" onClick={onOpenSidebar} title="My Builds">
-        🏠
+        📦
       </button>
     </div>
   )
