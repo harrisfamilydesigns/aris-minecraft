@@ -28,12 +28,27 @@ describe('drawBlock', () => {
 })
 
 describe('buildPreviewCanvas', () => {
-  it('returns a canvas of COLS*8 x ROWS*8 pixels', () => {
+  it('renders bounding box of placed blocks — old array format', () => {
     const COLS = 18, ROWS = 10
     const state = Array(ROWS).fill(null).map(() => Array(COLS).fill(null))
+    // Place blocks at (0,0) and (2,4) — bounding box is 3 rows × 5 cols
     state[0][0] = 'grass'
-    const canvas = buildPreviewCanvas(state, BUILT_IN_BLOCKS, COLS, ROWS)
-    expect(canvas.width).toBe(COLS * 8)
-    expect(canvas.height).toBe(ROWS * 8)
+    state[2][4] = 'dirt'
+    const canvas = buildPreviewCanvas(state, BUILT_IN_BLOCKS)
+    expect(canvas.width).toBe(5 * 8)
+    expect(canvas.height).toBe(3 * 8)
+  })
+
+  it('renders bounding box of placed blocks — new sparse-object format', () => {
+    const state = { '0,0': 'grass', '2,4': 'dirt' }
+    const canvas = buildPreviewCanvas(state, BUILT_IN_BLOCKS)
+    expect(canvas.width).toBe(5 * 8)
+    expect(canvas.height).toBe(3 * 8)
+  })
+
+  it('returns a tiny canvas for an empty world', () => {
+    const canvas = buildPreviewCanvas({}, BUILT_IN_BLOCKS)
+    expect(canvas.width).toBe(8)
+    expect(canvas.height).toBe(8)
   })
 })

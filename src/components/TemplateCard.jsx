@@ -1,15 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { buildPreviewCanvas } from '../lib/blocks'
 
-const COLS = 18
-const ROWS = 10
-
 export default function TemplateCard({ template, blocks, onLoad, onDelete }) {
   const previewRef = useRef(null)
 
   useEffect(() => {
     if (!previewRef.current) return
-    const canvas = buildPreviewCanvas(template.state, blocks, COLS, ROWS)
+    const canvas = buildPreviewCanvas(template.state, blocks)
     canvas.className = 'template-preview'
     const container = previewRef.current
     container.innerHTML = ''

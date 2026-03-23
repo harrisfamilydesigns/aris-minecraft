@@ -18,6 +18,19 @@ const Particles = forwardRef(function Particles(_, ref) {
         setTimeout(() => p.remove(), 1000)
       }
     },
+    spawnAt(x, y, colors) {
+      if (!containerRef.current) return
+      const cols = colors || ['#fff']
+      for (let i = 0; i < 4; i++) {
+        const p = document.createElement('div')
+        p.className = 'particle'
+        p.style.background = cols[Math.floor(Math.random() * cols.length)]
+        p.style.left = (x + (Math.random() - 0.5) * 36) + 'px'
+        p.style.top = (y + (Math.random() - 0.5) * 36) + 'px'
+        containerRef.current.appendChild(p)
+        setTimeout(() => p.remove(), 1000)
+      }
+    },
     spawnExplosion() {
       if (!containerRef.current) return
       const expColors = ['#ff6a00', '#ffaa00', '#cc0000', '#ff0000', '#ffff00']

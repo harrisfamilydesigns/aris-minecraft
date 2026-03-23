@@ -116,40 +116,84 @@ export function drawBlock(canvas, blockType, blocks) {
     }
 }
 
-export function buildPreviewCanvas(state, blocks, cols, rows) {
+// buildPreviewCanvas handles both state formats:
+//   Old: 2D array  state[r][c] = blockKey | null
+//   New: sparse object  {"r,c": blockKey}
+export function buildPreviewCanvas(state, blocks) {
+  const CELL = 8  // preview pixels per block cell
+
+  // Normalise to a cell map and find bounding box
+  let minR = Infinity, maxR = -Infinity, minC = Infinity, maxC = -Infinity
+  const cellMap = {}
+
+  if (Array.isArray(state)) {
+    // Old format
+    state.forEach((row, r) => {
+      if (!Array.isArray(row)) return
+      row.forEach((bt, c) => {
+        if (!bt) return
+        cellMap[`${r},${c}`] = bt
+        if (r < minR) minR = r; if (r > maxR) maxR = r
+        if (c < minC) minC = c; if (c > maxC) maxC = c
+      })
+    })
+  } else {
+    // New sparse-object format
+    Object.entries(state).forEach(([key, bt]) => {
+      if (!bt) return
+      const [r, c] = key.split(',').map(Number)
+      cellMap[key] = bt
+      if (r < minR) minR = r; if (r > maxR) maxR = r
+      if (c < minC) minC = c; if (c > maxC) maxC = c
+    })
+  }
+
+  if (Object.keys(cellMap).length === 0) {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = CELL
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#87CEEB'
+    ctx.fillRect(0, 0, CELL, CELL)
+    return canvas
+  }
+
+  const rows = maxR - minR + 1
+  const cols = maxC - minC + 1
   const canvas = document.createElement('canvas')
-  canvas.width = cols * 8
-  canvas.height = rows * 8
+  canvas.width = cols * CELL
+  canvas.height = rows * CELL
   const ctx = canvas.getContext('2d')
   ctx.imageSmoothingEnabled = false
   ctx.fillStyle = '#87CEEB'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-  for (let r = 0; r < rows; r++)
-    for (let c = 0; c < cols; c++) {
-      const bt = state[r][c]
-      if (!bt || !blocks[bt]) continue
-      const colors = blocks[bt].colors
-      const size = colors.length
-      if (size === 8) {
-        for (let py = 0; py < 8; py++)
-          for (let px = 0; px < 8; px++) {
-            if (colors[py][px] == null) continue
-            ctx.fillStyle = colors[py][px]
-            ctx.fillRect(c * 8 + px, r * 8 + py, 1, 1)
-          }
-      } else {
-        // Draw at native size into a temp canvas, then scale down to 8×8
-        const tmp = document.createElement('canvas')
-        tmp.width = tmp.height = size
-        const tctx = tmp.getContext('2d')
-        for (let py = 0; py < size; py++)
-          for (let px = 0; px < size; px++) {
-            if (colors[py][px] == null) continue
-            tctx.fillStyle = colors[py][px]
-            tctx.fillRect(px, py, 1, 1)
-          }
-        ctx.drawImage(tmp, c * 8, r * 8, 8, 8)
-      }
+
+  for (const [key, bt] of Object.entries(cellMap)) {
+    if (!blocks[bt]) continue
+    const [r, c] = key.split(',').map(Number)
+    const sx = (c - minC) * CELL
+    const sy = (r - minR) * CELL
+    const colors = blocks[bt].colors
+    const size = colors.length
+    if (size === CELL) {
+      for (let py = 0; py < size; py++)
+        for (let px = 0; px < size; px++) {
+          if (colors[py][px] == null) continue
+          ctx.fillStyle = colors[py][px]
+          ctx.fillRect(sx + px, sy + py, 1, 1)
+        }
+    } else {
+      const tmp = document.createElement('canvas')
+      tmp.width = tmp.height = size
+      const tctx = tmp.getContext('2d')
+      for (let py = 0; py < size; py++)
+        for (let px = 0; px < size; px++) {
+          if (colors[py][px] == null) continue
+          tctx.fillStyle = colors[py][px]
+          tctx.fillRect(px, py, 1, 1)
+        }
+      ctx.drawImage(tmp, sx, sy, CELL, CELL)
     }
+  }
+
   return canvas
 }

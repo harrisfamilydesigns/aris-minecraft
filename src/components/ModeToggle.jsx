@@ -1,17 +1,17 @@
-export default function ModeToggle({ mode, setMode }) {
+export default function ModeToggle({ mode, setMode, floating }) {
   return (
-    <div id="mode-toggle-bar">
+    <div id="mode-toggle-bar" className={floating ? 'floating' : ''}>
       <button
         className={`mode-btn${mode === 'world' ? ' active' : ''}`}
         onClick={() => setMode('world')}
       >
-        ⛏ WORLD BUILDER
+        ⛏ WORLD
       </button>
       <button
         className={`mode-btn${mode === 'block' ? ' active' : ''}`}
         onClick={() => setMode('block')}
       >
-        🎨 BLOCK BUILDER
+        🎨 BLOCKS
       </button>
     </div>
   )

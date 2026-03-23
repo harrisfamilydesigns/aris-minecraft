@@ -15,12 +15,7 @@ import SaveModal from './components/SaveModal'
 import Particles from './components/Particles'
 import CreeperPopup from './components/CreeperPopup'
 
-const COLS = 18
-const ROWS = 10
-
-function emptyGrid() {
-  return Array(ROWS).fill(null).map(() => Array(COLS).fill(null))
-}
+const BB_SIZE = 8
 
 function emptyBB(size = 8) {
   return Array(size).fill(null).map(() => Array(size).fill(null))
@@ -38,6 +33,20 @@ function scaleDown(grid) {
   )
 }
 
+// Convert old 2D-array template format to new sparse-object format
+function normaliseWorldState(state) {
+  if (!state) return {}
+  if (!Array.isArray(state)) return state  // already new format
+  const result = {}
+  state.forEach((row, r) => {
+    if (!Array.isArray(row)) return
+    row.forEach((block, c) => {
+      if (block) result[`${r},${c}`] = block
+    })
+  })
+  return result
+}
+
 // Defined outside App so its identity is stable — prevents CreeperPopup's useEffect timer
 // from resetting on every App re-render while the popup is visible.
 function CreeperPopupDismisser({ popup, onDone }) {
@@ -50,9 +59,8 @@ export default function App() {
   const [mode, setMode] = useState('world')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  // ── World grid ────────────────────────────────────────────────────────────
-  const [gridState, setGridState] = useState(emptyGrid)
-  const [blockCount, setBlockCount] = useState(0)
+  // ── World (sparse object: "r,c" → blockKey) ───────────────────────────────
+  const [worldState, setWorldState] = useState({})
   const [selectedBlock, setSelectedBlock] = useState('grass')
   const [isEraser, setIsEraser] = useState(false)
 
@@ -89,21 +97,6 @@ export default function App() {
   }, [customBlocksList])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
-  function handleLoadBBTemplate(colors) {
-    setBBState(colors.map(row => [...row]))
-    setBBResolution(colors.length)
-  }
-
-  function handleToggleBBResolution() {
-    if (bbResolution === 8) {
-      setBBState(prev => scaleUp(prev))
-      setBBResolution(16)
-    } else {
-      setBBState(prev => scaleDown(prev))
-      setBBResolution(8)
-    }
-  }
-
   function handleSelectBlock(key) {
     setIsEraser(false)
     setSelectedBlock(key)
@@ -112,12 +105,8 @@ export default function App() {
   function handleLoadTemplate(idx) {
     const tpl = templates[idx]
     if (!tpl) return
-    const next = emptyGrid()
-    for (let r = 0; r < ROWS; r++)
-      for (let c = 0; c < COLS; c++)
-        if (tpl.state[r]?.[c]) next[r][c] = tpl.state[r][c]
-    setGridState(next)
-    setBlockCount(next.flat().filter(Boolean).length)
+    const normalised = normaliseWorldState(tpl.state)
+    setWorldState(normalised)
     setMode('world')
     setPopup({
       message: tpl.name + ' loaded!',
@@ -141,9 +130,23 @@ export default function App() {
         style: { fontSize: '14px', color: '#FFD700', textShadow: '2px 2px 0 #000' },
       })
     } else {
-      const snapshot = gridState.map(row => [...row])
-      await saveTemplate.mutateAsync({ name, state: snapshot })
+      await saveTemplate.mutateAsync({ name, state: worldState })
       playFanfare()
+    }
+  }
+
+  function handleLoadBBTemplate(colors) {
+    setBBState(colors.map(row => [...row]))
+    setBBResolution(colors.length)
+  }
+
+  function handleToggleBBResolution() {
+    if (bbResolution === 8) {
+      setBBState(prev => scaleUp(prev))
+      setBBResolution(16)
+    } else {
+      setBBState(prev => scaleDown(prev))
+      setBBResolution(8)
     }
   }
 
@@ -162,27 +165,23 @@ export default function App() {
   return (
     <>
       <Clouds />
-      <div id="main-content">
-        <Header />
-        <ModeToggle mode={mode} setMode={setMode} />
-        {mode === 'world' && (
-          <WorldPanel
-            blocks={blocks}
-            selectedBlock={selectedBlock}
-            isEraser={isEraser}
-            gridState={gridState}
-            blockCount={blockCount}
-            onGridChange={setGridState}
-            onBlockCountChange={setBlockCount}
-            onSelectBlock={handleSelectBlock}
-            onSelectEraser={() => { setIsEraser(true); setSelectedBlock(null) }}
-            onOpenSaveModal={m => setSaveModal({ open: true, mode: m })}
-            onDeleteCustomBlock={handleDeleteCustomBlock}
-            onPopup={setPopup}
-            particlesRef={particlesRef}
-          />
-        )}
-        {mode === 'block' && (
+      {mode === 'world' ? (
+        <WorldPanel
+          worldState={worldState}
+          blocks={blocks}
+          selectedBlock={selectedBlock}
+          isEraser={isEraser}
+          onWorldChange={setWorldState}
+          onSelectBlock={handleSelectBlock}
+          onSelectEraser={() => setIsEraser(true)}
+          onOpenSaveModal={m => setSaveModal({ open: true, mode: m })}
+          onDeleteCustomBlock={handleDeleteCustomBlock}
+          onOpenSidebar={() => setSidebarOpen(o => !o)}
+          particlesRef={particlesRef}
+        />
+      ) : (
+        <div id="main-content">
+          <Header />
           <BlockPanel
             bbState={bbState}
             bbResolution={bbResolution}
@@ -196,10 +195,15 @@ export default function App() {
             onSelectEraser={() => setBBEraser(true)}
             onOpenSaveModal={m => setSaveModal({ open: true, mode: m })}
           />
-        )}
-      </div>
+        </div>
+      )}
+
+      <ModeToggle mode={mode} setMode={setMode} floating={mode === 'world'} />
+
       {sidebarOpen && <div id="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
-      <button id="sidebar-toggle" onClick={() => setSidebarOpen(o => !o)}>📦 MY BUILDS</button>
+      {mode !== 'world' && (
+        <button id="sidebar-toggle" onClick={() => setSidebarOpen(o => !o)}>📦 MY BUILDS</button>
+      )}
       <Sidebar
         templates={templates}
         blocks={blocks}
@@ -209,7 +213,7 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
       />
       <Particles ref={particlesRef} />
-      <Ground />
+      {mode !== 'world' && <Ground />}
       <SaveModal
         isOpen={saveModal.open}
         pendingMode={saveModal.mode}
