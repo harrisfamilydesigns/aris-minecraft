@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { drawBlock } from '../lib/blocks'
 import EraserIcon from './EraserIcon'
 
-function BlockBtn({ blockKey, block, isSelected, onSelect, onDelete, scrollingRef }) {
+function BlockBtn({ blockKey, block, isSelected, onSelect, scrollingRef }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -20,13 +20,6 @@ function BlockBtn({ blockKey, block, isSelected, onSelect, onDelete, scrollingRe
       }}
     >
       <canvas ref={canvasRef} />
-      {block.isCustom && (
-        <span
-          className="custom-del"
-          onClick={e => { e.stopPropagation(); onDelete(blockKey) }}
-          onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onDelete(blockKey) }}
-        >×</span>
-      )}
     </div>
   )
 }
@@ -40,7 +33,6 @@ export default function WorldBottomBar({
   onSave,
   onClear,
   onOpenSidebar,
-  onDeleteCustomBlock,
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const scrollingRef = useRef(false)
@@ -91,7 +83,6 @@ export default function WorldBottomBar({
             block={block}
             isSelected={!isEraser && selectedBlock === key}
             onSelect={onSelectBlock}
-            onDelete={onDeleteCustomBlock}
             scrollingRef={scrollingRef}
           />
         ))}

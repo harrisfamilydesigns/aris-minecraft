@@ -11,7 +11,6 @@ export default function WorldPanel({
   onSelectBlock,
   onSelectEraser,
   onOpenSaveModal,
-  onDeleteCustomBlock,
   onOpenSidebar,
   particlesRef,
 }) {
@@ -57,7 +56,6 @@ export default function WorldPanel({
         onSave={() => onOpenSaveModal('world')}
         onClear={handleClear}
         onOpenSidebar={onOpenSidebar}
-        onDeleteCustomBlock={onDeleteCustomBlock}
       />
     </>
   )

@@ -176,7 +176,6 @@ export default function App() {
           onSelectBlock={handleSelectBlock}
           onSelectEraser={() => setIsEraser(true)}
           onOpenSaveModal={m => setSaveModal({ open: true, mode: m })}
-          onDeleteCustomBlock={handleDeleteCustomBlock}
           onOpenSidebar={() => setSidebarOpen(o => !o)}
           particlesRef={particlesRef}
         />

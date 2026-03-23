@@ -19,7 +19,7 @@ export default function TemplateCard({ template, blocks, onLoad, onDelete }) {
       <div ref={previewRef} />
       <div className="template-actions">
         <button className="tpl-btn tpl-load" onClick={e => { e.stopPropagation(); onLoad() }}>▶ LOAD</button>
-        <button className="tpl-btn tpl-delete" onClick={e => { e.stopPropagation(); onDelete() }}>✕ DEL</button>
+        <button className="tpl-btn tpl-delete" onClick={e => { e.stopPropagation(); if (window.confirm(`Delete "${template.name}"?`)) onDelete() }}>✕ DEL</button>
       </div>
     </div>
   )
