@@ -130,7 +130,10 @@ body {
 }
 .wbb-eraser-btn.active {
   background: rgba(142,68,173,0.5);
-  box-shadow: inset 0 0 8px rgba(142,68,173,0.6);
+}
+.wbb-tool-split:has(.wbb-eraser-btn.active) {
+  border-color: #FFD700;
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
 }
 .wbb-eraser-btn:hover { background: rgba(255,255,255,0.15); }
 .wbb-dropdown-btn {
