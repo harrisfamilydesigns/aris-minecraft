@@ -39,7 +39,7 @@ export default function BlockTemplateDrawer({ customBlocks, isOpen, onClose, onL
             Save a block to use it as a starting point.
           </div>
         ) : (
-          customBlocks.map(cb => (
+          [...customBlocks].reverse().map(cb => (
             <BlockCard
               key={cb.key}
               blockKey={cb.key}
