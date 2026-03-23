@@ -217,7 +217,7 @@ export default function App() {
         </div>
       )}
 
-      <ModeToggle mode={mode} setMode={setMode} floating={mode === 'world'} />
+      <ModeToggle mode={mode} setMode={setMode} floating />
 
       {sidebarOpen && <div id="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
       {blockDrawerOpen && <div id="sidebar-backdrop" onClick={() => setBlockDrawerOpen(false)} />}
