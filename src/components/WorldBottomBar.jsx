@@ -20,13 +20,6 @@ function BlockBtn({ blockKey, block, isSelected, onSelect, onDelete, scrollingRe
       }}
     >
       <canvas ref={canvasRef} />
-      {block.isCustom && (
-        <span
-          className="custom-del"
-          onClick={e => { e.stopPropagation(); onDelete(blockKey) }}
-          onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onDelete(blockKey) }}
-        >×</span>
-      )}
     </div>
   )
 }

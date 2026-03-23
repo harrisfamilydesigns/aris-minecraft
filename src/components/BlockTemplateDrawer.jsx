@@ -19,7 +19,7 @@ function BlockCard({ blockKey, block, onLoad, onDelete }) {
       <canvas ref={canvasRef} className="template-preview" />
       <div className="template-actions">
         <button className="tpl-btn tpl-load" onClick={e => { e.stopPropagation(); onLoad() }}>▶ LOAD</button>
-        <button className="tpl-btn tpl-delete" onClick={e => { e.stopPropagation(); onDelete(blockKey) }}>✕ DEL</button>
+        <button className="tpl-btn tpl-delete" onClick={e => { e.stopPropagation(); if (window.confirm(`Delete "${block.name}"?`)) onDelete(blockKey) }}>✕ DEL</button>
       </div>
     </div>
   )
