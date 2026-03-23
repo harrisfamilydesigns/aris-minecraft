@@ -12,6 +12,13 @@ export default function BlockPanel({
 
   return (
     <div id="block-panel">
+      <BBGrid
+        bbState={bbState}
+        bbSize={bbResolution}
+        onBBChange={onBBChange}
+        selectedColor={selectedColor}
+        isEraser={isEraser}
+      />
       {usedColors.length > 0 && (
         <div className="used-colors">
           <span className="used-colors-label">USED:</span>
@@ -27,13 +34,6 @@ export default function BlockPanel({
           ))}
         </div>
       )}
-      <BBGrid
-        bbState={bbState}
-        bbSize={bbResolution}
-        onBBChange={onBBChange}
-        selectedColor={selectedColor}
-        isEraser={isEraser}
-      />
     </div>
   )
 }
