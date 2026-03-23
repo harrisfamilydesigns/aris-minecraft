@@ -4,12 +4,9 @@ const CELL_SIZE = 32  // pixels per cell at zoom=1
 const MIN_ZOOM = 0.15
 const MAX_ZOOM = 8
 
-function initialZoom() {
-  const w = window.innerWidth
-  // Cap at 0.65 on small screens so a pre-settled viewport width can't force
-  // zoom to 1.0 (which would show only ~12 cells on a 390px phone).
-  const cap = w < 1024 ? 0.65 : 1
-  return Math.min(cap, Math.floor((w - 8) / 20) / CELL_SIZE)
+function initialZoom(w) {
+  // Show ~18 cells across any screen width
+  return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, w / (18 * CELL_SIZE)))
 }
 
 export default function InfiniteWorldGrid({
@@ -23,7 +20,8 @@ export default function InfiniteWorldGrid({
 }) {
   const canvasRef = useRef(null)
   const panRef = useRef({ x: 4, y: 4 })
-  const zoomRef = useRef(initialZoom())
+  // Zoom is computed post-layout in onResize; use a safe fallback here.
+  const zoomRef = useRef(initialZoom(window.innerWidth || 390))
   const blockCacheRef = useRef(new Map())
   const rafRef = useRef(null)
   const scheduleRenderRef = useRef(null)
@@ -324,20 +322,20 @@ export default function InfiniteWorldGrid({
     // ── Resize ───────────────────────────────────────────────────────────────
     let sizedOnce = false
     function onResize() {
-      // Use canvas.clientWidth/Height (actual CSS layout size after position:fixed;inset:0)
-      // rather than window.innerWidth/Height, which may lag behind on mobile Safari.
-      const w = canvas.clientWidth || window.innerWidth
-      const h = canvas.clientHeight || window.innerHeight
-      if (!w || !h) return
-      // On first resize, recompute zoom from the real canvas width so the initial
-      // calculation (which may have run before the mobile viewport settled) is correct.
-      if (!sizedOnce) {
-        const cap = w < 1024 ? 0.65 : 1
-        zoomRef.current = Math.min(cap, Math.floor((w - 8) / 20) / CELL_SIZE)
-        sizedOnce = true
-      }
+      // Prefer canvas.clientWidth (CSS layout size of the fixed+inset:0 canvas)
+      // over window.innerWidth, which can be unreliable on mobile until layout settles.
+      const w = canvas.clientWidth || window.innerWidth || 390
+      const h = canvas.clientHeight || window.innerHeight || 600
+      // Set dimensions first so canvas.width is authoritative.
       canvas.width = w
       canvas.height = h
+      // On first resize, compute zoom so ~18 cells fit across the canvas.
+      // Deriving from canvas.width (not a pre-layout window measure) ensures the
+      // cell count is correct regardless of DPR or viewport timing quirks.
+      if (!sizedOnce) {
+        zoomRef.current = initialZoom(canvas.width)
+        sizedOnce = true
+      }
       scheduleRender()
     }
 
