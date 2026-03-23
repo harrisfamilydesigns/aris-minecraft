@@ -5,11 +5,11 @@ import { useTemplates, useSaveTemplate, useDeleteTemplate } from './hooks/useTem
 import { useCustomBlocks, useSaveCustomBlock, useDeleteCustomBlock } from './hooks/useCustomBlocks'
 
 import Clouds from './components/Clouds'
-import Ground from './components/Ground'
-import Header from './components/Header'
 import ModeToggle from './components/ModeToggle'
 import WorldPanel from './components/WorldPanel'
 import BlockPanel from './components/BlockPanel'
+import BlockBottomBar from './components/BlockBottomBar'
+import BlockTemplateDrawer from './components/BlockTemplateDrawer'
 import Sidebar from './components/Sidebar'
 import SaveModal from './components/SaveModal'
 import Particles from './components/Particles'
@@ -58,6 +58,7 @@ export default function App() {
   // ── Mode ──────────────────────────────────────────────────────────────────
   const [mode, setMode] = useState('world')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [blockDrawerOpen, setBlockDrawerOpen] = useState(false)
 
   // ── World (sparse object: "r,c" → blockKey) ───────────────────────────────
   const [worldState, setWorldState] = useState({})
@@ -181,19 +182,37 @@ export default function App() {
         />
       ) : (
         <div id="main-content">
-          <Header />
           <BlockPanel
             bbState={bbState}
             bbResolution={bbResolution}
             onBBChange={setBBState}
-            onToggleResolution={handleToggleBBResolution}
-            onLoadTemplate={handleLoadBBTemplate}
-            customBlocks={customBlocksList}
             selectedColor={bbColor}
             isEraser={bbEraser}
             onSelectColor={c => { setBBColor(c); setBBEraser(false) }}
+          />
+          <BlockBottomBar
+            selectedColor={bbColor}
+            isEraser={bbEraser}
+            bbResolution={bbResolution}
+            onSelectColor={c => { setBBColor(c); setBBEraser(false) }}
             onSelectEraser={() => setBBEraser(true)}
-            onOpenSaveModal={m => setSaveModal({ open: true, mode: m })}
+            onFill={() => {
+              if (bbEraser) return
+              if (!window.confirm('Fill entire canvas with this color?')) return
+              setBBState(Array(bbResolution).fill(null).map(() => Array(bbResolution).fill(bbColor)))
+            }}
+            onClear={() => {
+              setBBState(Array(bbResolution).fill(null).map(() => Array(bbResolution).fill(null)))
+            }}
+            onSave={() => setSaveModal({ open: true, mode: 'block' })}
+            onToggleResolution={handleToggleBBResolution}
+            onOpenTemplates={() => setBlockDrawerOpen(true)}
+          />
+          <BlockTemplateDrawer
+            customBlocks={customBlocksList}
+            isOpen={blockDrawerOpen}
+            onClose={() => setBlockDrawerOpen(false)}
+            onLoad={handleLoadBBTemplate}
           />
         </div>
       )}
@@ -201,9 +220,7 @@ export default function App() {
       <ModeToggle mode={mode} setMode={setMode} floating={mode === 'world'} />
 
       {sidebarOpen && <div id="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
-      {mode !== 'world' && (
-        <button id="sidebar-toggle" onClick={() => setSidebarOpen(o => !o)}>📦 MY BUILDS</button>
-      )}
+      {blockDrawerOpen && <div id="sidebar-backdrop" onClick={() => setBlockDrawerOpen(false)} />}
       <Sidebar
         templates={templates}
         blocks={blocks}
@@ -213,7 +230,7 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
       />
       <Particles ref={particlesRef} />
-      {mode !== 'world' && <Ground />}
+
       <SaveModal
         isOpen={saveModal.open}
         pendingMode={saveModal.mode}

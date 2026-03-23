@@ -200,6 +200,134 @@ body {
 }
 .wbb-builds-btn:hover { background: rgba(255,215,0,0.15); border-color: #FFD700; }
 
+/* ── Block builder bottom bar ── */
+#block-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  padding: 6px 8px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  background: rgba(20,14,6,0.93);
+  border-top: 3px solid #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
+}
+
+/* Fill button */
+.wbb-fill-btn {
+  font-size: 18px;
+  padding: 0 8px;
+  height: 44px;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid #555;
+  border-radius: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+.wbb-fill-btn:hover { background: rgba(255,255,255,0.15); }
+.wbb-fill-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Color swatches in the bottom bar strip */
+.bb-bar-swatch {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+/* Custom color picker button */
+.wbb-custom-color-btn {
+  font-size: 16px;
+  width: 36px;
+  height: 44px;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  border: 2px solid #555;
+  border-radius: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.12s;
+}
+.wbb-custom-color-btn.selected { border-color: #FFD700; box-shadow: 0 0 8px #FFD700; }
+.wbb-custom-color-btn input[type=color] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+/* Resolution toggle button */
+.wbb-res-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 0 8px;
+  height: 44px;
+  background: rgba(22,160,133,0.5);
+  border: 2px solid #555;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.wbb-res-btn.active { background: rgba(230,126,34,0.6); box-shadow: 0 0 8px rgba(230,126,34,0.5); }
+.wbb-res-btn:hover { background: rgba(255,255,255,0.15); }
+
+/* ── Block template drawer ── */
+#block-drawer {
+  width: 180px;
+  background: rgba(30,20,10,0.92);
+  border-left: 4px solid #555;
+  display: flex;
+  flex-direction: column;
+  z-index: 29;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+#block-drawer.open { transform: translateX(0); }
+#block-drawer .bb-template-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.12s;
+}
+#block-drawer .bb-template-btn:hover { background: rgba(255,215,0,0.1); }
+#block-drawer .bb-template-btn canvas {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  border: 2px solid #555;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+#block-drawer .bb-template-name {
+  font-size: 6px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ── Block buttons (shared by bottom bar and toolbar) ── */
 .block-btn {
   width: 44px;
@@ -233,13 +361,15 @@ body {
 .block-btn:hover .custom-del { display:block; }
 .cell canvas, .block-btn canvas { width:100%; height:100%; image-rendering:pixelated; display:block; }
 
-/* ── Block-mode layout (unchanged from old world layout) ── */
+/* ── Block-mode layout ── */
 #main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Header (block mode only) */
@@ -253,7 +383,7 @@ body {
 @keyframes titleBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
 /* ── BLOCK BUILDER PANEL ── */
-#block-panel { display:flex; flex-direction:column; align-items:center; flex:1; overflow:hidden; }
+#block-panel { display:flex; flex-direction:column; align-items:center; flex:1; overflow:hidden; padding-bottom:64px; }
 
 .bb-label { font-size:8px; color:#1a3a00; padding:2px 0; text-align:center; z-index:10; position:relative; }
 
@@ -499,6 +629,11 @@ body {
   .color-swatch { width: 24px; height: 24px; }
   #sidebar-toggle { font-size: 6px; padding: 5px 8px; }
   #world-bottom-bar { height: 60px; }
+  #block-bottom-bar { height: 60px; }
   .wbb-eraser-btn { height: 40px; font-size: 16px; }
   .wbb-dropdown-btn { height: 40px; }
+  .wbb-fill-btn { height: 40px; font-size: 16px; }
+  .wbb-res-btn { height: 40px; font-size: 8px; }
+  .wbb-custom-color-btn { height: 40px; }
+  .bb-bar-swatch { width: 24px; height: 24px; }
 }
