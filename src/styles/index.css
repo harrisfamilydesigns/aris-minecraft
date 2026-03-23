@@ -158,7 +158,9 @@ body {
   min-width: 110px;
 }
 .wbb-dropdown-menu button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   width: 100%;
   text-align: left;
   padding: 9px 12px;
@@ -217,20 +219,6 @@ body {
   z-index: 20;
 }
 
-/* Fill button */
-.wbb-fill-btn {
-  font-size: 18px;
-  padding: 0 8px;
-  height: 44px;
-  background: rgba(255,255,255,0.08);
-  border: 2px solid #555;
-  border-radius: 5px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.12s;
-}
-.wbb-fill-btn:hover { background: rgba(255,255,255,0.15); }
-.wbb-fill-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* Color swatches in the bottom bar strip */
 .bb-bar-swatch {
@@ -607,8 +595,7 @@ body {
   #block-bottom-bar { height: 60px; }
   .wbb-eraser-btn { height: 40px; font-size: 16px; }
   .wbb-dropdown-btn { height: 40px; }
-  .wbb-fill-btn { height: 40px; font-size: 16px; }
-  .wbb-res-btn { height: 40px; font-size: 8px; }
+.wbb-res-btn { height: 40px; font-size: 8px; }
   .wbb-custom-color-btn { height: 40px; }
   .bb-bar-swatch { width: 24px; height: 24px; }
 }

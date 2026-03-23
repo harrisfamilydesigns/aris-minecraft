@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { PALETTE } from '../lib/palette'
 import EraserIcon from './EraserIcon'
+import FillIcon from './FillIcon'
 
 export default function BlockBottomBar({
   selectedColor,
@@ -29,14 +30,6 @@ export default function BlockBottomBar({
 
   return (
     <div id="block-bottom-bar">
-      {/* ── Fill ── */}
-      <button
-        className="wbb-fill-btn"
-        onClick={onFill}
-        disabled={isEraser}
-        title="Fill canvas with selected color"
-      >🪣</button>
-
       {/* ── Eraser + dropdown ── */}
       <div className="wbb-left" onPointerDown={e => e.stopPropagation()}>
         <div className="wbb-tool-split">
@@ -53,6 +46,9 @@ export default function BlockBottomBar({
         </div>
         {dropdownOpen && (
           <div className="wbb-dropdown-menu">
+            <button onClick={() => { onFill(); setDropdownOpen(false) }}>
+              <FillIcon size={14} /> FILL
+            </button>
             <button onClick={() => { onSave(); setDropdownOpen(false) }}>💾 SAVE</button>
             <button onClick={() => { onClear(); setDropdownOpen(false) }}>💥 CLEAR</button>
           </div>
