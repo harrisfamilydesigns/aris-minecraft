@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 
 const CELL_SIZE = 32  // pixels per cell at zoom=1
-const MIN_ZOOM = 0.5
+const MIN_ZOOM = 0.4
 const MAX_ZOOM = 8
 
 function initialZoom(w) {
