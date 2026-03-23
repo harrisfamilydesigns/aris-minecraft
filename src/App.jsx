@@ -213,6 +213,7 @@ export default function App() {
             isOpen={blockDrawerOpen}
             onClose={() => setBlockDrawerOpen(false)}
             onLoad={handleLoadBBTemplate}
+            onDelete={handleDeleteCustomBlock}
           />
         </div>
       )}

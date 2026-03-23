@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { drawBlock } from '../lib/blocks'
 
-function TemplateButton({ blockKey, block, onClick }) {
+function TemplateButton({ blockKey, block, onClick, onDelete }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -10,13 +10,20 @@ function TemplateButton({ blockKey, block, onClick }) {
 
   return (
     <div className="bb-template-btn" onClick={onClick} title={block.name}>
-      <canvas ref={canvasRef} />
+      <div style={{ position: 'relative', flexShrink: 0 }}>
+        <canvas ref={canvasRef} />
+        <span
+          className="custom-del"
+          style={{ display: 'block' }}
+          onClick={e => { e.stopPropagation(); onDelete(blockKey) }}
+        >×</span>
+      </div>
       <span className="bb-template-name">{block.name}</span>
     </div>
   )
 }
 
-export default function BlockTemplateDrawer({ customBlocks, isOpen, onClose, onLoad }) {
+export default function BlockTemplateDrawer({ customBlocks, isOpen, onClose, onLoad, onDelete }) {
   return (
     <div id="block-drawer" className={isOpen ? 'open' : ''}>
       <div id="sidebar-title">
@@ -36,6 +43,7 @@ export default function BlockTemplateDrawer({ customBlocks, isOpen, onClose, onL
               blockKey={cb.key}
               block={cb}
               onClick={() => { onLoad(cb.colors); onClose() }}
+              onDelete={onDelete}
             />
           ))
         )}
