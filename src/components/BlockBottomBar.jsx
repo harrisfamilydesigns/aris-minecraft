@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PALETTE } from '../lib/palette'
+import EraserIcon from './EraserIcon'
 
 export default function BlockBottomBar({
   selectedColor,
@@ -43,7 +44,7 @@ export default function BlockBottomBar({
             className={`wbb-eraser-btn${isEraser ? ' active' : ''}`}
             onClick={onSelectEraser}
             title="Eraser"
-          >🧹</button>
+          ><EraserIcon /></button>
           <button
             className="wbb-dropdown-btn"
             onClick={() => setDropdownOpen(o => !o)}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { drawBlock } from '../lib/blocks'
+import EraserIcon from './EraserIcon'
 
 function BlockBtn({ blockKey, block, isSelected, onSelect, onDelete, scrollingRef }) {
   const canvasRef = useRef(null)
@@ -61,7 +62,7 @@ export default function WorldBottomBar({
             className={`wbb-eraser-btn${isEraser ? ' active' : ''}`}
             onClick={onSelectEraser}
             title="Eraser"
-          >🧹</button>
+          ><EraserIcon /></button>
           <button
             className="wbb-dropdown-btn"
             onClick={() => setDropdownOpen(o => !o)}
