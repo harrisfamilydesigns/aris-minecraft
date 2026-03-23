@@ -170,25 +170,40 @@ export default function InfiniteWorldGrid({
     }
 
     // ── Touch ────────────────────────────────────────────────────────────────
-    let paintActive = false
-    let lastCell = null
+    // Never paint in touchstart — wait until touchmove (drag) or touchend (tap).
+    // Once two fingers are seen in a gesture, suppress all painting for that gesture.
+    let startCell = null    // cell where first finger landed
+    let startSx = 0         // screen coords of that touch (for particles)
+    let startSy = 0
+    let lastCell = null     // last cell painted (drag deduplication)
+    let multiTouchSeen = false  // true if ≥2 fingers touched this gesture
+    let paintedThisGesture = false  // true if we already painted ≥1 cell
     let pinchState = null
 
     function dist(t1, t2) {
       return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
     }
 
+    function resetGesture() {
+      startCell = null
+      lastCell = null
+      multiTouchSeen = false
+      paintedThisGesture = false
+      pinchState = null
+    }
+
     function onTouchStart(e) {
       e.preventDefault()
       if (e.touches.length === 1) {
-        paintActive = true
-        pinchState = null
+        resetGesture()
         const { clientX: sx, clientY: sy } = e.touches[0]
-        const cell = screenToCell(sx, sy)
-        lastCell = cell
-        paintCell(cell.row, cell.col, sx, sy)
+        startSx = sx; startSy = sy
+        startCell = screenToCell(sx, sy)
+        lastCell = startCell
+        // Do NOT paint yet — wait for move or end to distinguish tap from pinch
       } else if (e.touches.length >= 2) {
-        paintActive = false
+        // Second finger arrived — this is a pinch/pan gesture, not a paint gesture
+        multiTouchSeen = true
         const t1 = e.touches[0], t2 = e.touches[1]
         pinchState = {
           dist: dist(t1, t2),
@@ -202,14 +217,21 @@ export default function InfiniteWorldGrid({
 
     function onTouchMove(e) {
       e.preventDefault()
-      if (e.touches.length === 1 && paintActive) {
+      if (e.touches.length === 1 && !multiTouchSeen) {
         const { clientX: sx, clientY: sy } = e.touches[0]
         const cell = screenToCell(sx, sy)
         if (!lastCell || lastCell.row !== cell.row || lastCell.col !== cell.col) {
+          // First movement across a cell boundary — paint the start cell first
+          if (!paintedThisGesture && startCell) {
+            paintCell(startCell.row, startCell.col, startSx, startSy)
+            paintedThisGesture = true
+          }
           lastCell = cell
           paintCell(cell.row, cell.col, sx, sy)
+          paintedThisGesture = true
         }
       } else if (e.touches.length >= 2 && pinchState) {
+        multiTouchSeen = true
         const t1 = e.touches[0], t2 = e.touches[1]
         const newDist = dist(t1, t2)
         const newMidX = (t1.clientX + t2.clientX) / 2
@@ -232,14 +254,14 @@ export default function InfiniteWorldGrid({
     function onTouchEnd(e) {
       e.preventDefault()
       if (e.touches.length === 0) {
-        paintActive = false
-        pinchState = null
-        lastCell = null
+        // All fingers lifted — if this was a clean single-finger tap, paint now
+        if (!multiTouchSeen && !paintedThisGesture && startCell) {
+          paintCell(startCell.row, startCell.col, startSx, startSy)
+        }
+        resetGesture()
       } else if (e.touches.length === 1) {
-        // Released one finger of a pinch — reset, don't resume painting
-        paintActive = false
-        pinchState = null
-        lastCell = null
+        // One finger of a pinch released — don't resume painting with remaining finger
+        resetGesture()
       }
     }
 
