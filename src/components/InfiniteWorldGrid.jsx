@@ -25,6 +25,8 @@ export default function InfiniteWorldGrid({
   const blockCacheRef = useRef(new Map())
   const rafRef = useRef(null)
   const scheduleRenderRef = useRef(null)
+  const showOriginRef = useRef(false)
+  const hideOriginTimerRef = useRef(null)
 
   // Keep latest prop values in refs so canvas callbacks never go stale
   const worldStateRef = useRef(worldState)
@@ -66,6 +68,15 @@ export default function InfiniteWorldGrid({
       })
     }
     scheduleRenderRef.current = scheduleRender
+
+    function flashOrigin() {
+      showOriginRef.current = true
+      clearTimeout(hideOriginTimerRef.current)
+      hideOriginTimerRef.current = setTimeout(() => {
+        showOriginRef.current = false
+        scheduleRender()
+      }, 1500)
+    }
 
     function getBlockImage(key, block) {
       let img = blockCacheRef.current.get(key)
@@ -132,6 +143,16 @@ export default function InfiniteWorldGrid({
           const sy = r * cellPx + panY
           ctx.drawImage(getBlockImage(bt, bl[bt]), sx, sy, cellPx, cellPx)
         }
+      }
+
+      // Origin marker — thick border around (0,0) while panning/zooming
+      if (showOriginRef.current) {
+        const ox = panX
+        const oy = panY
+        const bw = 3
+        ctx.strokeStyle = '#FFD700'
+        ctx.lineWidth = bw
+        ctx.strokeRect(ox + bw / 2, oy + bw / 2, cellPx - bw, cellPx - bw)
       }
 
       // Report top-left coordinate
@@ -247,6 +268,7 @@ export default function InfiniteWorldGrid({
           x: newMidX - worldMidX * CELL_SIZE * newZoom,
           y: newMidY - worldMidY * CELL_SIZE * newZoom,
         }
+        flashOrigin()
         zoomRef.current = newZoom
         scheduleRender()
       }
@@ -294,6 +316,7 @@ export default function InfiniteWorldGrid({
 
     function onWheel(e) {
       e.preventDefault()
+      flashOrigin()
       if (e.ctrlKey || e.metaKey) {
         // Pinch-to-zoom on trackpad sends ctrlKey=true
         const factor = e.deltaY < 0 ? 1.1 : 0.9
@@ -308,6 +331,7 @@ export default function InfiniteWorldGrid({
     }
 
     function applyZoom(factor, cx, cy) {
+      flashOrigin()
       const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomRef.current * factor))
       const worldX = (cx - panRef.current.x) / (CELL_SIZE * zoomRef.current)
       const worldY = (cy - panRef.current.y) / (CELL_SIZE * zoomRef.current)
@@ -361,6 +385,7 @@ export default function InfiniteWorldGrid({
       window.removeEventListener('resize', onResize)
       cancelAnimationFrame(initRaf)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      clearTimeout(hideOriginTimerRef.current)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
