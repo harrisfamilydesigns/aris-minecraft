@@ -97,7 +97,7 @@ export default function InfiniteWorldGrid({
 
       ctx.imageSmoothingEnabled = false
       ctx.clearRect(0, 0, w, h)
-      ctx.fillStyle = '#87CEEB'
+      ctx.fillStyle = 'transparent'
       ctx.fillRect(0, 0, w, h)
 
       const minCol = Math.floor(-panX / cellPx) - 1
@@ -322,10 +322,8 @@ export default function InfiniteWorldGrid({
     // ── Resize ───────────────────────────────────────────────────────────────
     let sizedOnce = false
     function onResize() {
-      // Prefer canvas.clientWidth (CSS layout size of the fixed+inset:0 canvas)
-      // over window.innerWidth, which can be unreliable on mobile until layout settles.
-      const w = canvas.clientWidth || window.innerWidth || 390
-      const h = canvas.clientHeight || window.innerHeight || 600
+      const w = window.innerWidth || 390
+      const h = window.innerHeight || 600
       // Set dimensions first so canvas.width is authoritative.
       canvas.width = w
       canvas.height = h

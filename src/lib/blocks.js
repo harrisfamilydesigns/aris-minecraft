@@ -152,7 +152,7 @@ export function buildPreviewCanvas(state, blocks) {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = CELL
     const ctx = canvas.getContext('2d')
-    ctx.fillStyle = '#87CEEB'
+    ctx.fillStyle = 'transparent'
     ctx.fillRect(0, 0, CELL, CELL)
     return canvas
   }

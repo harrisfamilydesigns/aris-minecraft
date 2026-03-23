@@ -26,6 +26,8 @@ body {
 #infinite-canvas {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   touch-action: none;
   display: block;
@@ -329,7 +331,8 @@ body {
 .bb-grid-container { display:flex; justify-content:center; padding:4px; position:relative; z-index:5; }
 .bb-grid {
   display:grid; gap:1px;
-  background:#87CEEB; border:3px solid #555; border-radius:4px;
+  /* background:#87CEEB; border:3px solid #555; border-radius:4px; */
+
   box-shadow:inset 0 0 16px rgba(0,0,0,0.15), 0 4px 15px rgba(0,0,0,0.2);
 }
 .bb-cell {
