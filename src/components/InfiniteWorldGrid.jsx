@@ -320,7 +320,7 @@ export default function InfiniteWorldGrid({
       if (e.ctrlKey || e.metaKey) {
         // Pinch-to-zoom on trackpad sends ctrlKey=true
         // Math.pow gives proportional zoom — slow gesture = tiny step, fast = larger
-        const factor = Math.pow(0.999, e.deltaY)
+        const factor = Math.pow(0.995, e.deltaY)
         applyZoom(factor, e.clientX, e.clientY)
       } else {
         panRef.current = {
