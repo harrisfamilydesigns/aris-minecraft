@@ -56,3 +56,10 @@ Tests live alongside source in `src/lib/blocks.test.js`. The Vitest config uses 
 ```bash
 npx vitest run src/lib/blocks.test.js
 ```
+
+## Gotchas
+
+- **Canvas sizing**: Don't use `canvas.clientWidth`/`clientHeight` to set the draw buffer — it returns the default 300×150 if `position: fixed; inset: 0` hasn't applied yet. Use `window.innerWidth`/`innerHeight` directly in `onResize`.
+- **`inset: 0` alone isn't enough**: Pair it with `width: 100%; height: 100%` on the canvas so older mobile browsers still fill the viewport.
+- **Pinch vs tap on mobile**: Never paint on `touchstart` — wait for `touchmove` (drag) or `touchend` (tap) and track `multiTouchSeen` to suppress painting for the rest of any pinch gesture.
+- **Stale closures in canvas callbacks**: All mutable state accessed inside imperative event handlers must be read via refs (e.g. `worldStateRef.current`), not captured by the single `useEffect` closure.
