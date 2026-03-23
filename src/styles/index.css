@@ -319,7 +319,7 @@ body {
 }
 .block-btn:hover .tooltip { display:block; }
 .block-btn .custom-del {
-  display:none; position:absolute; top:-7px; right:-7px;
+  display:none; position:absolute; top:-2px; right:-2px;
   width:16px; height:16px; background:#c0392b; border:2px solid #fff;
   border-radius:50%; font-size:9px; color:white; text-align:center;
   line-height:12px; z-index:50; cursor:pointer; font-family:sans-serif;
@@ -416,9 +416,11 @@ body {
 
 /* Used colors row */
 .used-colors {
-  display:flex; flex-wrap:wrap; align-items:center; gap:4px;
-  padding:3px 8px; position:relative; z-index:10; max-width:380px;
+  display:flex; flex-wrap:nowrap; align-items:center; gap:4px;
+  padding:3px 8px; position:relative; z-index:10;
+  overflow-x:auto; scrollbar-width:none;
 }
+.used-colors::-webkit-scrollbar { display:none; }
 .used-colors-label {
   font-family:'Press Start 2P', monospace; font-size:6px; color:#1a3a00;
   white-space:nowrap;
