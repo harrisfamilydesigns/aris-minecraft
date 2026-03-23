@@ -96,6 +96,15 @@ export default function WorldPanel({
     particlesRef.current?.spawnExplosion()
   }
 
+  function handleFill() {
+    if (!selectedBlock || isEraser) return
+    const name = blocks[selectedBlock]?.name ?? selectedBlock
+    if (!window.confirm(`Fill entire grid with ${name}?`)) return
+    const filled = Array(ROWS).fill(null).map(() => Array(COLS).fill(selectedBlock))
+    onGridChange(filled)
+    onBlockCountChange(ROWS * COLS)
+  }
+
   function handleSurprise() {
     playExplosion()
     const empty = Array(ROWS).fill(null).map(() => Array(COLS).fill(null))
@@ -133,6 +142,11 @@ export default function WorldPanel({
       />
       <div className="controls">
         <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
+        <button
+          className="ctrl-btn btn-fill"
+          onClick={handleFill}
+          disabled={!selectedBlock || isEraser}
+        >🪣 FILL</button>
         <button className="ctrl-btn btn-surprise" onClick={handleSurprise}>⭐ SURPRISE!</button>
         <button className="ctrl-btn btn-save" onClick={() => onOpenSaveModal('world')}>💾 SAVE</button>
         <button className="ctrl-btn btn-clear" onClick={handleClear}>💥 CLEAR</button>

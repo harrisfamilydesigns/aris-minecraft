@@ -20,6 +20,13 @@ export default function BlockPanel({
     onBBChange(empty)
   }
 
+  function handleFill() {
+    if (isEraser) return
+    if (!window.confirm(`Fill entire canvas with this color?`)) return
+    const filled = Array(bbResolution).fill(null).map(() => Array(bbResolution).fill(selectedColor))
+    onBBChange(filled)
+  }
+
   const usedColors = [...new Set(bbState.flat().filter(Boolean))]
 
   return (
@@ -56,6 +63,11 @@ export default function BlockPanel({
       />
       <div className="controls">
         <button className="ctrl-btn btn-eraser" onClick={onSelectEraser}>🧹 ERASER</button>
+        <button
+          className="ctrl-btn btn-fill"
+          onClick={handleFill}
+          disabled={isEraser}
+        >🪣 FILL</button>
         <button className="ctrl-btn btn-clear" onClick={handleClear}>🔄 CLEAR</button>
         <button
           className={`ctrl-btn btn-resolution${bbResolution === 16 ? ' active' : ''}`}
