@@ -20,15 +20,6 @@ function BlockButton({ blockKey, block, isSelected, onSelect, onDelete }) {
     >
       <canvas ref={canvasRef} />
       <span className="tooltip">{block.name}</span>
-      {block.isCustom && (
-        <span
-          className="custom-del"
-          onClick={e => { e.stopPropagation(); onDelete(blockKey) }}
-          onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onDelete(blockKey) }}
-        >
-          ×
-        </span>
-      )}
     </div>
   )
 }
